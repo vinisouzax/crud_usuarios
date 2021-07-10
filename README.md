@@ -1,3 +1,3 @@
-# crud_usuarios
+#crud_usuarios
 
-Aplicação para criação, edição, exclusão e listagem de usuários
+Aplicação em laravel para criar, editar, listar e excluir usuários
