@@ -22,13 +22,4 @@ class User extends Authenticatable
         'password',
         'birthday'
     ];
-
-    /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'password'
-    ];
 }

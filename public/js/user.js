@@ -107,7 +107,7 @@ function setUser(id){
             $('#name').val(res.response.name);
             $('#email').val(res.response.email);
             $('#birthday').val(res.response.birthday);
-            $('#password').val("");
+            $('#password').val(res.response.password);
         }
     });
 }
