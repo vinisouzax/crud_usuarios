@@ -1,7 +1,9 @@
 $(document).ready(function () {
     create_table();
 
-    $("#btnSubmit").click(function (event) {
+    $("#birthday").mask("99/99/9999");
+
+    $("#btnSubmit").on("click", function (event) {
 
         event.preventDefault();
 
@@ -17,22 +19,27 @@ $(document).ready(function () {
         }
         
         let url = "api/users/store";
+        let type = "POST";
 
-        if(id) url = `api/users/update/${id}`;
+        if(id){
+            url = `api/users/update/${id}`;
+            type = "PUT";
+        } 
 
         $.ajax({
-            type: "POST",
+            type: type,
             url: url,
             data: JSON.stringify(data),
             dataType: 'json',
             contentType: 'application/json',
             success: function (res) {
-                console.log(res);
+                alert("Salvo com sucesso");
                 create_table();
                 $("#btnSubmit").prop("disabled", false);
+                $('#modalUser').modal('hide');
             },
             error: function (e) {
-                console.log(e);
+                alert("Erro ao realizar operação de salvamento");
                 $("#btnSubmit").prop("disabled", false);
             }
         });
@@ -68,8 +75,16 @@ function create_table(){
                     <td>${r.name}</td>
                     <td>${r.email}</td>
                     <td>${r.birthday}</td>
-                    <td>Editar</td>
-                    <td>Excluir</td>
+                    <td><button type="button" 
+                        class="btn btn-primary" 
+                        data-toggle="modal" 
+                        data-target="#modalUser" 
+                        onclick='setUser(${r.id})'>Editar</button>
+                    </td>
+                    <td><button type="button" 
+                        class="btn btn-danger" 
+                        onclick='delUser(${r.id})'>Excluir</button>
+                    </td>
                 </tr>`;        
             });
 
@@ -80,4 +95,44 @@ function create_table(){
             $("#usersList").html(table);
         }
     });
+}
+
+function setUser(id){
+    $.ajax({
+        url: `api/users/show/${id}`,
+        type: 'GET',
+        dataType: 'json',
+        success: function(res) {
+            $('#id').val(res.response.id);
+            $('#name').val(res.response.name);
+            $('#email').val(res.response.email);
+            $('#birthday').val(res.response.birthday);
+            $('#password').val("");
+        }
+    });
+}
+
+function delUser(id){
+    if (window.confirm("Deseja excluir usuário?")) {
+        $.ajax({
+            url: `api/users/delete/${id}`,
+            type: 'DELETE',
+            dataType: 'json',
+            success: function(res) {
+                alert("Usuário excluído com sucesso");
+                create_table();
+            },
+            error: function (e) {
+                alert("Erro ao excluir usuário");
+            }
+        });
+    }
+}
+
+function clearModal(){
+    $('#id').val("");
+    $('#name').val("");
+    $('#email').val("");
+    $('#birthday').val("");
+    $('#password').val("");
 }
