@@ -29,13 +29,12 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-
         try {
             $user = User::create([
                 'name'     => $request->name,
                 'email'    => $request->email,
-                'password' => Hash::make($request->password),
-                'birthday'    => $request->birthday,
+                'password' => $request->password,
+                'birthday' => $request->birthday,
             ]);
             $data = ['response' => $user];
             return response()->json($data, 200);
